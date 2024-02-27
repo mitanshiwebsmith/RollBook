@@ -1,0 +1,411 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+
+<h2 style="text-align:center">RollBook</h2>
+<hr />
+<div class="container" style="text-align:center">
+    <input type="hidden" id="RollID" name="RollID" />
+    <div class="row" style="padding-bottom:20px;">
+        <div class="col-md-1">
+            Quality
+        </div>
+        <div class="col-md-1">
+            :
+        </div>
+        <div class="col-md-2">
+            <select class="form-control" id="QualityID" name="QualityID">
+                <option value="0">Select Quality</option>
+                @{
+                    if (ViewBag.lstRoll != null)
+                    {
+                        foreach (RollBook.Models.QualityMaster item in ViewBag.lstRoll)
+                        {
+                            <option value="@item.QualityID">@item.QualityName</option>
+                        }
+                    }
+                }
+            </select>
+            @*<input type="text" id="QualityID" class="form-control" name="QualityID" />*@
+        </div>
+        <div class="col-md-1">
+            Loom No
+        </div>
+        <div class="col-md-1">
+            :
+        </div>
+        <div class="col-md-2">
+            <select class="form-control" id="LoomID" name="LoomID">
+                <option value="0">Select Loom</option>
+                @{
+                    if (ViewBag.lstLoom != null)
+                    {
+                        foreach (RollBook.Models.LoomMaster item in ViewBag.lstLoom)
+                        {
+                            <option value="@item.LoomID">@item.LoomNo</option>
+                        }
+                    }
+                }
+            </select>
+        </div>
+        <div class="col-md-1">
+            Size
+        </div>
+        <div class="col-md-1">
+            :
+        </div>
+        <div class="col-md-2">
+            <select class="form-control" id="SizeID" name="SizeID">
+                <option value="0">Select Size</option>
+                @{
+                    if (ViewBag.lstSize != null)
+                    {
+                        foreach (RollBook.Models.SizeMaster item in ViewBag.lstSize)
+                        {
+                            <option value='@item.TW+"_"+@item.SizeID'>
+                                @item.Size
+                            </option>
+                        }
+                    }
+                }
+            </select>
+        </div>
+    </div>
+
+    <div class="row" style="padding-bottom:20px;">
+        <div class="col-md-1">
+            Roll No
+        </div>
+        <div class="col-md-1">
+            :
+        </div>
+        <div class="col-md-2">
+            <input type="text" id="RollNo" class="form-control" name="RollNo" />
+        </div>
+        
+        <div class="col-md-1">
+            DNR
+        </div>
+        <div class="col-md-1">
+            :
+        </div>
+        <div class="col-md-2">
+            <input type="text" id="DNR" class="form-control" name="DNR" onkeypress='return event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46' />
+        </div>
+        <div class="col-md-1">
+            OpMtr
+        </div>
+        <div class="col-md-1">
+            :
+        </div>
+        <div class="col-md-2">
+            <input type="text" id="OpMtr" class="form-control" name="OpMtr" onkeypress='return event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46' />
+        </div>
+    </div>
+
+    <div class="row" style="padding-bottom:20px;">
+        <div class="col-md-1">
+            CbMtr
+        </div>
+        <div class="col-md-1">
+            :
+        </div>
+        <div class="col-md-2">
+            <input type="text" id="CbMtr" class="form-control" name="CbMtr" onkeypress='return event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46' />
+        </div>
+        <div class="col-md-1">
+            QW
+        </div>
+        <div class="col-md-1">
+            :
+        </div>
+        <div class="col-md-2">
+            <input type="text" id="QW" name="QW" class="form-control" onkeypress='return event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46' />
+        </div>
+        <div class="col-md-2">
+            <button id="btnSave" class="btn btn-success" onclick="Save();">Save</button>
+            <button id="btnCancel" class="btn btn-danger" onclick="ClearControls();">Cancel</button>
+        </div>
+        
+    </div>
+
+    <div class="row" style="padding-bottom:20px;">
+        @*<div class="col-md-2">
+                TW
+            </div>
+            <div class="col-md-1">
+                :
+            </div>
+            <div class="col-md-3">
+                <input type="text" id="TW" name="TW" class="form-control" onkeypress='return event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46' />
+            </div>*@
+        
+    </div>
+
+</div>
+
+<br />
+
+<div style="padding-bottom:40px;">
+    <div class="col-md-3">
+        <select class="form-control" id="SearchQualityID" name="SearchQualityID">
+            <option value="0">Select Quality</option>
+            @{
+                if (ViewBag.lstRoll != null)
+                {
+                    foreach (RollBook.Models.QualityMaster item in ViewBag.lstRoll)
+                    {
+                        <option value="@item.QualityID">@item.QualityName</option>
+                    }
+                }
+            }
+        </select>
+    </div>
+    <div class="col-md-3">
+        <input type="date" id="SearchDate" name="SearchDate" class="form-control" />
+    </div>
+    <div class="col-md-2">
+        <button id="btnSearch" class="btn btn-success" onclick="GetData();">Search</button>
+    </div>
+    <div class="col-md-2" style="float:right">
+        <button id="btnDelete" class="btn btn-danger" onclick="DeleteRecords();">Delete</button>
+    </div>
+    <div class="col-md-2" style="float:right">
+        <a id="btnExport" href="~/Roll/ExportToExcel" class="btn btn-primary">Export To Excel</a>
+    </div>
+
+</div>
+
+
+<br />
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-12">
+        <table id="datatable" class="table table-striped table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+            <thead>
+                <tr>
+                    <th>SrNo.</th>
+                    <th>Quality</th>
+                    <th>Loom No</th>
+                    <th>Roll No</th>
+                    <th>Size</th>
+                    <th>DNR</th>
+                    <th>OpMtr</th>
+                    <th>CbMtr</th>
+                    <th>Total Mtr</th>
+                    <th>QW</th>
+                    <th>TW</th>
+                    <th>NW</th>
+                    <th>AVR</th>
+                    <th>Edit</th>
+                    <th>Select</th>
+            </thead>
+            <tbody id="data"></tbody>
+        </table>
+    </div>
+</div>
+
+@section scripts{
+
+    <script>
+        $(document).ready(function () {
+            GetData();
+        });
+
+        //get all data
+        function GetData() {
+            var d = new Date();
+            var output = d.getFullYear() + '-' + (d.getMonth() + 1 < 10 ? '0' : '') + (d.getMonth() + 1) + '-' + (d.getDate() < 10 ? '0' : '') + d.getDate();
+
+            var mData = {
+                QualityID: $("#SearchQualityID").val(),
+                EntryDate: $("#SearchDate").val() == '' ? output : $("#SearchDate").val()
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "/Roll/GetData",
+                data: JSON.stringify(mData),
+                contentType: "application/json",
+                dataType: "json",
+                success: function (mRes) {
+
+                    var obj = JSON.parse(mRes);
+                    var iHTML = "";
+                    if (obj.length === 0) {
+                        $("#data").html("<tr><td colspan='15' align='center'>No Data Found.</td></tr>");
+                    }
+                    else {
+                        
+                        var sum = 0;
+                        for (var i = 0; i < obj.length; i++) {
+                            sum += parseFloat(obj[i].NW);
+
+                            iHTML += "<tr>";
+                            iHTML += "<td>" + (i + 1) + "</td>";
+                            iHTML += "<td>" + obj[i].QualityName + "</td>";
+                            iHTML += "<td>" + obj[i].LoomNo + "</td>";
+                            iHTML += "<td>" + obj[i].RollNo + "</td>";
+                            iHTML += "<td>" + obj[i].Size + "</td>";
+                            iHTML += "<td>" + obj[i].DNR + "</td>";
+                            iHTML += "<td>" + obj[i].OpMtr + "</td>";
+                            iHTML += "<td>" + obj[i].CbMtr + "</td>";
+                            iHTML += "<td>" + (obj[i].OpMtr - obj[i].CbMtr) + "</td>";
+                            iHTML += "<td>" + obj[i].QW + "</td>";
+                            iHTML += "<td>" + obj[i].TW + "</td>";
+                            iHTML += "<td>" + obj[i].NW + "</td>";
+                            iHTML += "<td>" + (obj[i].NW / (obj[i].OpMtr - obj[i].CbMtr) * 1000).toFixed(2) + "</td>";
+                            iHTML += '<td><button class="btn w-sd btn-danger" id=' + obj[i].RollID + ' onclick="Get(this.id)">Edit</button ></td>';
+                            iHTML += '<td><input type="checkbox" id=' + obj[i].RollID + ' value=' + obj[i].RollID + ' name="checkedRecord"></td>';
+                            iHTML += "</tr>";
+                        }
+                        iHTML += "<tr>";
+                        iHTML += "<td colspan='10'></td>";
+                        iHTML += "<td colspan='2'><b>Total NW : " + sum + "<b/></td>";
+                        iHTML += "</tr>";
+                        $("#data").html(iHTML);
+                    }
+                },
+                error: function (err) {
+                    swal(err.statusText);
+                }
+            });
+        }
+
+        //save student data
+        function Save() {
+
+            if ($("#QualityID").val() == 0) {
+                alert("Please Select Quality");
+                return false;
+            }
+            if ($("#LoomID").val() == 0) {
+                alert("Please Select Loom No");
+                return false;
+            }
+            if ($("#RollNo").val() == null) {
+                alert("Enter Roll No");
+                return false;
+            }
+            if ($("#SizeID").val() == 0) {
+                alert("Please Select Size");
+                return false;
+            }
+            if ($("#DNR").val() == null) {
+                alert("Enter DNR");
+                return false;
+            }
+            if ($("#OpMtr").val() == null) {
+                alert("Enter OpMtr");
+                return false;
+            }
+            if ($("#CbMtr").val() == null) {
+                alert("Enter CbMtr");
+                return false;
+            }
+            if ($("#QW").val() == null) {
+                alert("Enter QW");
+                return false;
+            }
+            //if ($("#TW").val() == null) {
+            //    alert("Enter TW");
+            //    return false;
+            //}
+            var mData = {
+                QualityID: $("#QualityID").val(),
+                LoomID: $("#LoomID").val(),
+                RollNo: $("#RollNo").val(),
+                SizeID: $("#SizeID").val().split("+")[2],
+                DNR: $("#DNR").val(),
+                OpMtr: $("#OpMtr").val(),
+                CbMtr: $("#CbMtr").val(),
+                QW: $("#QW").val(),
+                TW: $("#SizeID").val().split("+")[0],
+                RollID: $("#RollID").val(),
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "/Roll/Save",
+                data: JSON.stringify(mData),
+                contentType: "application/json",
+                dataType: "json",
+                success: function (mRes) {
+                    //alert(mRes)
+                    GetData();
+                    ClearControls();
+                },
+                error: function (err) {
+                    swal(err.statusText);
+                }
+            });
+        }
+
+        function ClearControls() {
+            $("#QualityID").val(0);
+            $("#LoomID").val(0);
+            $("#RollNo").val("");
+            $("#SizeID").val(0);
+            $("#DNR").val("");
+            $("#OpMtr").val("");
+            $("#CbMtr").val("");
+            $("#QW").val("");
+            //$("#TW").val("");
+            $("#RollID").val("");
+        }
+
+        function Get(id) {
+
+            ClearControls();
+
+            var mData = { RollID: id }
+
+            $.ajax({
+                type: "POST",
+                url: "/Roll/Get",
+                data: JSON.stringify(mData),
+                contentType: "application/json",
+                dataType: "json",
+                success: function (mRes) {
+                    var obj = JSON.parse(mRes);
+                    $("#QualityID").val(obj[0].QualityID);
+                    $("#LoomID").val(obj[0].LoomID);
+                    $("#RollNo").val(obj[0].RollNo);
+                    $("#SizeID").val(obj[0].TW + '+"_"+' + obj[0].SizeID);
+                    $("#DNR").val(obj[0].DNR);
+                    $("#OpMtr").val(obj[0].OpMtr);
+                    $("#CbMtr").val(obj[0].CbMtr);
+                    $("#QW").val(obj[0].QW);
+                    //$("#TW").val(obj[0].TW);
+                    $("#RollID").val(obj[0].RollID);
+                }
+            });
+        }
+
+        function DeleteRecords() {
+            //alert($('input[name="checkedRecord"]:checked').serialize());
+
+            var favorite = [];
+            $.each($("input[name='checkedRecord']:checked"), function () {
+                favorite.push($(this).val());
+            });
+            alert(favorite.join(", "));
+            var mData = { RollID: favorite.join(", ") }
+
+            $.ajax({
+                type: "POST",
+                url: "/Roll/Delete",
+                data: JSON.stringify(mData),
+                contentType: "application/json",
+                dataType: "json",
+                success: function (mRes) {
+                    GetData();
+                    alert("deleted records.");
+                }
+            });
+
+        }
+
+    </script>
+}
